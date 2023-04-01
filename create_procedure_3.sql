@@ -37,6 +37,8 @@ DELIMITER ;
 
 
 
+
+
 -- Create procedure CancelBooking
 DROP PROCEDURE CancelBooking;
 DELIMITER &&
@@ -44,6 +46,7 @@ CREATE PROCEDURE CancelBooking(IN id INT)
 DELETE FROM Bookings
 WHERE booking_id = id &&
 DELIMITER ;
+
 
 -- Below Statement For PROCEDURE testing
 -- CALL CancelBooking(6);
