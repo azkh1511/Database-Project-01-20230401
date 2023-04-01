@@ -44,14 +44,19 @@ DELIMITER ;
 DROP PROCEDURE AddValidBooking;
 DELIMITER &&
 CREATE PROCEDURE AddValidBooking(IN book_date DATE, IN table_num INT)
-START TRANSACTION;
-IF table_num IN (SELECT table_num FROM Bookings) THEN 
-    SELECT CONCAT('Table ', CAST(table_num AS CHAR), ' is already booked - booking cancelled')
-    FROM Bookings;
-    COMMIT;
-ELSE 
-    INSERT INTO Bookings
-    VALUES ((SELECT COUNT(*) FROM Bookings) + 1, book_date, table_num, 1, 1);
-    COMMIT;
-END IF &&
+BEGIN
+    START TRANSACTION;
+    IF table_num IN (SELECT table_num FROM Bookings) THEN 
+        ROLLBACK;
+        SELECT CONCAT('Table ', CAST(table_num AS CHAR), ' is already booked - booking cancelled')
+        FROM Bookings;
+    ELSE 
+        INSERT INTO Bookings
+        VALUES ((SELECT COUNT(*) FROM Bookings) + 1, book_date, table_num, 1, 1);
+        COMMIT;
+    END IF &&
+END
 DELIMITER ;
+
+
+
